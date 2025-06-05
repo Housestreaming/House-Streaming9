@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>House Streaming</title>
+<style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      background-color: #0a0f2c;
+      color: white;
+      text-align: center;
+    }
+    header {
+      padding: 20px;
+    }
+    header img {
+      max-width: 200px;
+    }
+    h1 {
+      margin: 10px 0;
+      font-size: 24px;
+    }
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background-color: #1c1f3b;
+      border-radius: 16px;
+      width: 240px;
+      color: #fff;
+      margin: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .card img {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+    }
+    .card h3 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+    }
+    .card p {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .card button {
+      padding: 5px 10px;
+      background-color: #00bcd4;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+    .cart {
+      background-color: #1c1f3b;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 12px;
+    }
+    .cart h2 {
+      margin-bottom: 10px;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #444;
+    }
+    .total {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .checkout {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  
+    #toast {
+      visibility: hidden;
+      min-width: 200px;
+      background-color: #4caf50;
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      padding: 12px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      font-size: 16px;
+      transform: translateX(-50%);
+    }
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+    
+@keyframes bounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.card.animate {
+  animation: bounce 0.4s ease;
+}
+
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;display=swap" rel="stylesheet"/></head>
+<body>
+<div style="width: 100%; max-width: 100%; overflow: hidden;">
+<img alt="Banner House Streaming" src="banner_nuevo.png" style="width: 100%; height: auto;"/>
+</div>
+<div style="padding: 20px 30px; max-width: 800px; margin: auto; font-size: 16px; line-height: 1.6;">
+  Somos <strong>House Streaming</strong>, una tienda digital especializada en la venta de pantallas y cuentas completas de las principales plataformas de streaming.
+  Nuestro compromiso es ofrecerte acceso confiable, económico y rápido a tus servicios favoritos como Netflix, Spotify, HBO Max, Disney+, entre otros.
+  Más de 1 año de experiencia respalda nuestro servicio. 📱💻📺
+</div>
+<div style="display: flex; justify-content: center; gap: 40px; align-items: center; margin: 20px 0;">
+<div style="text-align: center;">
+<a href="https://www.instagram.com/housestreaming1" target="_blank">
+<img alt="Instagram" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" style="width: 50px;"/>
+</a>
+<p style="margin: 5px 0; font-size: 14px;">@housestreaming1</p>
+</div>
+<div style="text-align: center;">
+<a href="https://www.tiktok.com/@housestreaming" target="_blank">
+<img alt="TikTok" src="https://upload.wikimedia.org/wikipedia/commons/0/09/TikTok_logo.svg" style="width: 50px;"/>
+</a>
+<p style="margin: 5px 0; font-size: 14px;">@housestreaming</p>
+</div>
+</div>
+<header>
+<img alt="House Streaming Logo" src="HOUSE_STREAMING_PNG.png"/>
+<h1>Bienvenido a House Streaming, realiza tu compra.<span title="Verificado por confianza y calidad"> 🛡️</span></h1>
+</header>
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin: 20px;">
+<input id="search-input" placeholder="Buscar plataforma..." style="padding: 10px; border-radius: 8px; border: none; width: 250px; font-family: Montserrat;" type="text"/>
+<div style="color: #00bcd4; font-weight: bold; font-size: 16px;">
+    Carrito: <span id="cart-count">0</span> productos
+  </div>
+</div>
+<div class="products" id="product-list"></div>
+<div class="cart" id="cart">
+<h2>Carrito de Compras</h2>
+<div id="cart-items"></div>
+<div class="total" id="cart-total">Total: $0</div>
+<button class="checkout" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+</div>
+<script>
+  const products = [
+    { name: 'Netflix', price: 13000, image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg' },
+    { name: 'Disney+', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg' },
+    { name: 'HBOMAX', price: 9000, image: 'https://upload.wikimedia.org/wikipedia/commons/1/17/HBO_Max_Logo.svg' },
+    { name: 'PrimeVideo', price: 9000, image: 'https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video.png' },
+    { name: 'Crunchyroll', price: 9000, image: 'https://upload.wikimedia.org/wikipedia/commons/6/60/Crunchyroll_Logo.svg' },
+    { name: 'Spotify Premium', price: 13000, image: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg' },
+    { name: 'Youtube premium', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_Premium_logo.svg' },
+    { name: 'Viki Rakuten', price: 8000, image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Rakuten_Viki_Logo.svg' },
+    { name: 'DIRECTV GO con WIN+', price: 29000, image: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/DirecTV_GO_Logo.png' },
+    { name: 'Paramount+', price: 8000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Paramount_Plus_Logo.svg' },
+    { name: 'Vix Premium', price: 9000, image: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Vix_logo.svg' },
+    { name: 'XBOX GAME PASS ULTIMATE', price: 33000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Xbox_Game_Pass_logo.svg' },
+    { name: 'Apple TV', price: 10000, image: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_TV_Plus_Logo.svg' },
+    { name: 'DEEZER', price: 11000, image: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Deezer_logo.svg' },
+    { name: 'Jellyfin', price: 10000, image: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Jellyfin_Logo.svg' },
+    { name: 'Canva PRO 45 DIAS', price: 12000, image: 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Canva_logo.svg' },
+    { name: 'Prime Video COMPLETA', price: 17000, image: 'https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video.png' },
+    { name: 'Crunchyroll COMPLETA', price: 13000, image: 'https://upload.wikimedia.org/wikipedia/commons/6/60/Crunchyroll_Logo.svg' },
+    { name: 'DISNEY+ COMPLETA', price: 16000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg' },
+    { name: 'HBOMAX COMPLETA', price: 16000, image: 'https://upload.wikimedia.org/wikipedia/commons/1/17/HBO_Max_Logo.svg' },
+    { name: 'NETFLIX COMPLETA', price: 34000, image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg' },
+    { name: 'Paramount+ COMPLETA', price: 14000, image: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Paramount_Plus_Logo.svg' },
+    { name: 'NETFLIX INTERNACIONAL COMPLETA', price: 45000, image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg' },
+    { name: 'Netflix PANTALLA INTERNACIONAL', price: 16000, image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg' },
+    { name: 'Spotify Premium 2 MESES', price: 23000, image: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg' },
+    { name: 'Spotify Premium 3 MESES', price: 30000, image: 'https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg' },
+    { name: 'Youtube PREMIUM 2 MESES', price: 22000, image: 'https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_Premium_logo.svg' },
+    { name: 'Youtube Premium 3 MESES', price: 30000, image: 'https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_Premium_logo.svg' },
+    { name: 'ONLYFANS SALDO 50 DOLARES', price: 60000, image: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/OnlyFans_logo.svg' },
+    { name: 'DUOLINGO PLUS', price: 9000, image: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Duolingo_logo.svg' },
+    { name: 'ARMA TU COMBO x3 APPS', price: 25000, image: 'https://cdn-icons-png.flaticon.com/512/565/565547.png' },
+    { name: 'ARMA TU COMBO x4 APPS', price: 29000, image: 'https://cdn-icons-png.flaticon.com/512/565/565547.png' }
+  ];
+
+  const cart = [];
+  const productList = document.getElementById('product-list');
+  const cartItems = document.getElementById('cart-items');
+  const cartTotal = document.getElementById('cart-total');
+
+  function renderProducts() {
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>$${product.price.toLocaleString()}</p>
+        <button onclick="addToCart('${product.name}', ${product.price})">Agregar</button>
+      `;
+      productList.appendChild(card);
+    });
+  }
+
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    updateCart();
+  }
+
+  function updateCart() {
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, index) => {
+      total += item.price;
+      const itemEl = document.createElement('div');
+      itemEl.className = 'cart-item';
+      itemEl.innerHTML = `
+        <span>${item.name}</span>
+        <span>$${item.price.toLocaleString()}</span>
+        <button onclick="removeItem(${index})">Eliminar</button>
+      `;
+      cartItems.appendChild(itemEl);
+    });
+    cartTotal.textContent = `Total: $${total.toLocaleString()}`;
+  }
+
+  function removeItem(index) {
+  cart.splice(index, 1);
+  updateCart();
+  showToast("Producto eliminado con éxito.");
+  return;
+    cart.splice(index, 1);
+    updateCart();
+  }
+
+  function checkout() {
+    if (cart.length === 0) return alert("El carrito está vacío");
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const items = cart.map(item => item.name).join(', ');
+    const message = encodeURIComponent(`Hola, quiero comprar estas plataformas: ${items}. Total: $${total.toLocaleString()}`);
+    window.open(`https://wa.me/573053403809?text=${message}`, '_blank');
+  }
+
+  renderProducts();
+</script>
+<div style="margin: 30px 0;">
+<h2 style="color: #fff;">Medios de Pago</h2>
+<div style="display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; margin-bottom: 10px;">
+<img alt="Nequi Logo" src="https://seeklogo.com/images/N/nequi-logo-F4578D00D3-seeklogo.com.png" style="width: 100px;"/>
+<img alt="Daviplata Logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Daviplata_logo.svg/512px-Daviplata_logo.svg.png" style="width: 100px;"/>
+</div>
+<p style="font-size: 18px; color: #00bcd4;">305 340 3809</p>
+</div>
+<div style="margin: 30px 0;">
+<p style="font-size: 16px; color: #ffffff;">Envíanos tu comprobante y en un lapso de máximo 25 minutos te enviamos las cuentas</p>
+</div>
+<a href="https://wa.me/573053403809" style="position: fixed; bottom: 100px; right: 20px; background-color: #25d366; color: white; padding: 12px 16px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-size: 24px; text-decoration: none; z-index: 1000;" target="_blank">
+  💬
+</a>
+<a href="#" onclick="sharePage()" style="position: fixed; bottom: 40px; right: 20px; background-color: #00bcd4; color: white; padding: 12px 16px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-size: 24px; text-decoration: none; z-index: 1000;" title="Compartir esta página">
+  🔗
+</a>
+<footer style="padding: 20px; background: #111; color: #888; margin-top: 40px;">
+<p>© 2025 House Streaming — Todos los derechos reservados.</p>
+<p>
+<a href="#product-list" style="color: #00bcd4; text-decoration: none;">Ir al catálogo</a> |
+    <a href="#cart" style="color: #00bcd4; text-decoration: none;">Ver carrito</a> |
+    <a href="https://wa.me/573053403809" style="color: #00bcd4; text-decoration: none;" target="_blank">Contáctanos</a>
+</p>
+</footer>
+<script>
+document.getElementById("search-input").addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+  const cards = document.querySelectorAll(".card");
+  cards.forEach(card => {
+    const name = card.querySelector("h3").innerText.toLowerCase();
+    card.style.display = name.includes(value) ? "block" : "none";
+  });
+});
+
+function updateCartCount() {
+  document.getElementById("cart-count").textContent = cart.length;
+}
+
+// Añadir al final de updateCart y addToCart:
+const originalUpdateCart = updateCart;
+updateCart = function () {
+  originalUpdateCart();
+  updateCartCount(); showToast();
+};
+const originalAddToCart = addToCart;
+addToCart = function(name, price) {
+  originalAddToCart(name, price);
+  updateCartCount(); 
+  showToast();
+
+  // Agregar animación a la tarjeta correspondiente
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    const title = card.querySelector('h3')?.innerText;
+    if (title === name) {
+      card.classList.add('animate');
+      setTimeout(() => card.classList.remove('animate'), 400);
+    }
+  });
+};
+
+function sharePage() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent("Mira estas plataformas increíbles en House Streaming:");
+  window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
+}
+
+function showToast(message = "Producto agregado al carrito. Desplázate hacia abajo para finalizar tu compra.") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = "show";
+  setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+}
+</script><div id="toast">Producto agregado al carrito. Desplázate hacia abajo para finalizar tu compra.</div></body>
+</html>
